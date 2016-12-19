@@ -199,7 +199,3 @@ void loop() {
   delay(120);
   digitalWrite(LED_BUILTIN, LOW);                 // Set built-in LED to default: Off
 }
-
-
-
-//                        ENDOFTHESIS = true
