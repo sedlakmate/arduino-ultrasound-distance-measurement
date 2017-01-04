@@ -155,7 +155,7 @@ void loop() {
                    // are found in the datasheet, and calculated from the assumed speed 
                    // of sound in air at sea level (~340 m/s).
                    // mm = round(pulse_width / 0.580)/10; // Original calculation method
-  mm = round(pulse_width *1.79+6.76)/10; // Calibrated method
+  mm = round(pulse_width *1.716+6.76)/10; // Calibrated method
   // Print out results
   if ( pulse_width > MAX_DIST ) {
     // Serial.println("Out of range");
