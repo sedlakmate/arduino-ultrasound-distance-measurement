@@ -1,39 +1,51 @@
 /**
- * HC-SR04 Demo
- * Demonstration of the HC-SR04 Ultrasonic Sensor
- * Date: August 3, 2016
+ * This code is based on the <OCTOPUS 036A Segmentric LED Brick>'s sample library 
+ * and the <HC-SR04 Ultrasonic Sensor>'s sample library. 
+ * The merging process was carried out by Máté Szedlák, 2016.
+ * 
+ * License: GNU GENERAL PUBLIC LICENSE 3.0 
  * 
  * Description:
- *  Connect the ultrasonic sensor to the Arduino as per the
+ *  Connect the ultrasonic sensor and the LED brick to the Arduino as per the
  *  hardware connections below. Run the sketch and open a serial
  *  monitor. The distance read from the sensor will be displayed
- *  in 10*milimeters.
+ *  in millimeters.
+ *  
+ *  If data is transferred as there is fresh result, the LED Brick will light more powerful 
+ *  and each data transfer is signed by the blink of the built-in LED.
+ *  
+ *  If there is no active data transfer, the LED's brightness will change to low and
+ *  the built-in LED will turn off.
  *  
  *  *******************************
- *  The distance is measured from the front face of the device.
+ *  The distance is measured from the front face of the ultrasonic device.
  *  
- *  The calibration is done for the range 30 mm - 150 mm. Below 30 mm the results will be higher than should be. Over 150 mm is not tested.
+ *  The calibration is done for the range 30 mm - 200 mm.
+ *  Below 30 mm the results will be higher than should be.
+ *  Over 200 mm is not tested.
  *  *******************************
  * 
  * Hardware Connections:
  *  Arduino | HC-SR04 
  *  -------------------
- *    5V    |   VCC     
- *    7     |   Trig     
+ *    5V    |   VCC  +330 Ohm   
+ *    7     |   Trig +330 Ohm    
  *    8     |   Echo     
  *    GND   |   GND
+ *    
+ *  Arduino | OCTOPUS 036A 
+ *  -------------------
+ *    2     |   CLK     
+ *    3     |   DIO +330 Ohm     
+ *    3V    |   VCC +330 Ohm    
+ *    GND   |   GND
  *  
- * License:
- *  Public Domain
  */
 
- /*
-  * Other source:
-  * https://www.arduino.cc/en/Tutorial/Smoothing
-  */
-
-// The lines marked with "***" are usable only with 
-// OCTOPUS 036A Segmentric LED Brick. Otherwise can be deleted
+/* The lines marked with "***" belong to the 
+ * OCTOPUS 036A Segmentric LED Brick. Otherwise can be deleted
+ */
+ 
 #include "TM1637.h"                         //   ***
 
 // Pins
@@ -42,8 +54,6 @@ const int ECHO_PIN = 8;   // Ultrasound device
 
 #define CLK 2             // LED display  
 #define DIO 3             // LED display 
-//const int CLK = 2;           // LED display
-//const int DIO = 3;           // LED display
 
 TM1637 tm1637(CLK,DIO);                     //   *** 
 
@@ -77,9 +87,9 @@ void setup() {
     readings[thisReading] = 0;  
   }
 
-  tm1637.init();                                                       //   *** 
+  tm1637.init();                                                       // *** 
   tm1637.set(4);//BRIGHT_TYPICAL = 2,BRIGHT_DARKEST = 0,BRIGHTEST = 7; // *** 
-  tm1637.point(POINT_ON);                                              //   ***
+  tm1637.point(POINT_ON);                                              // ***
 }
 
 void reset(){
@@ -113,8 +123,7 @@ void ledprint(int number){       //   *** The whole function belongs to the LED 
     digit[2] = number / 10;
     number -= digit[2] * 10;
     digit[3] = number;  
-  } else {
-      //tm1637.display(0, 14); tm1637.display(1, 0); tm1637.display(2, 0); tm1637.display(3, 6);
+  } else {    
       int8_t errorcode[] = {14, 0x7f, 0x7f, 6};
       tm1637.display(errorcode);
   }
@@ -142,10 +151,10 @@ void loop() {
   t2 = micros();
   pulse_width = t2 - t1;
 
-                        // Calculate distance in miliimeters. The constants
-                        // are found in the datasheet, and calculated from the assumed speed 
-                        // of sound in air at sea level (~340 m/s).
-                        // mm = round(pulse_width / 0.580)/10; // Original calculation method
+                   // Calculate distance in millimeters. The constants
+                   // are found in the datasheet, and calculated from the assumed speed 
+                   // of sound in air at sea level (~340 m/s).
+                   // mm = round(pulse_width / 0.580)/10; // Original calculation method
   mm = round(pulse_width *1.79+6.76)/10; // Calibrated method
   // Print out results
   if ( pulse_width > MAX_DIST ) {
@@ -172,20 +181,21 @@ void loop() {
         }
         // Calcualting the average
         average = sum / numReadings;
-        if ((count == numReadings) and (average < prevavg + threshold) and (average > prevavg - threshold)) {
+        if ((count == numReadings) and (average < prevavg + threshold)
+        and (average > prevavg - threshold)) {
           Serial.print(average);               
           Serial.println(",");
           //Serial.print(average);
           //Serial.println(",."); 
-          tm1637.set(4);                          //   ***          
-          digitprint =(int) (average*10.0);       //   *** 
-          ledprint(digitprint);                   //   *** 
-          digitalWrite(LED_BUILTIN, HIGH);        // Set built-in LED ON
+          tm1637.set(4);                    //   ***          
+          digitprint =(int) (average*10.0); //   *** 
+          ledprint(digitprint);             //   *** 
+          digitalWrite(LED_BUILTIN, HIGH);  // Set built-in LED ON
         }
         prevavg = average;
       } else {
-        tm1637.set(0);                            //   ***
-        ledprint(digitprint);                     //   ***
+        tm1637.set(0);                      //   ***
+        ledprint(digitprint);               //   ***
         if (count == numReadings){
           dropcount += 1;
           if (dropcount == 3){
@@ -197,5 +207,9 @@ void loop() {
   
   // Wait at least 120ms before next measurement
   delay(120);
-  digitalWrite(LED_BUILTIN, LOW);                 // Set built-in LED to default: Off
+  digitalWrite(LED_BUILTIN, LOW);       // Set built-in LED to default: Off
 }
+
+
+
+//                        ENDOFTHESIS = true
