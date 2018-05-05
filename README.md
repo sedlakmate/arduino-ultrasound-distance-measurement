@@ -9,10 +9,10 @@ by an ultrasound device through a USB serial stream.
 * OCTOPUS 036A Segmentric LED Brick
 * breadboard, resistors, wires and other tools according to the wiring schemas
 
+# Wiring
+
+Wiring is only partially provided in the [Ultrasound_distance.ino](https://github.com/szedlakmate/arduino-ultrasound-distance-measurement/blob/master/Ultrasound_distance/Ultrasound_distance/Ultrasound_distance.ino) file.
+
 # Deployment
 
 For deploying the code, the official Arduino application is suggested.
-
-# Note
-
-Wiring is not provided yet but might be found in the project files.
