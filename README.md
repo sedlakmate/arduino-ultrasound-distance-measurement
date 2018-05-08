@@ -15,4 +15,4 @@ Wiring is only partially provided in the [Ultrasound_distance.ino](https://githu
 
 # Deployment
 
-For deploying the code, the official Arduino application is suggested.
+For deploying the code, the official [Arduino applications](https://www.arduino.cc/en/Main/Software) are suggested.
