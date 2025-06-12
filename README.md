@@ -11,7 +11,7 @@ by an ultrasound device through a USB serial stream.
 
 # Wiring
 
-Wiring is only partially provided in the [Ultrasound_distance.ino](https://github.com/szedlakmate/arduino-ultrasound-distance-measurement/blob/master/Ultrasound_distance/Ultrasound_distance/Ultrasound_distance.ino) file.
+Wiring is only partially provided in the [Ultrasound_distance.ino](https://github.com/sedlakmate/arduino-ultrasound-distance-measurement/blob/master/Ultrasound_distance/Ultrasound_distance/Ultrasound_distance.ino) file.
 
 # Deployment
 
